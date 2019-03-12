@@ -1,0 +1,187 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-family: var(--font-family);
+	color: white;
+}
+
+a{
+	text-decoration: none;
+}
+
+div.clear{
+	clear: both;
+}
+
+.button{
+	display: block;
+	background: var(--button-background);
+	padding: var(--button-padding);
+	color: var(--button-color);
+	border: var(--button-border);
+	border-radius: var(--button-border-radius);
+	text-align: var(--button-text-align);
+	cursor: pointer;
+	transition: var(--button-transition);
+}
+
+.button:hover{
+	background: var(--button-hover-background);
+	color: var(--button-hover-color);
+}
+
+.button:active{
+	background: var(--button-active-background);
+	color: var(--button-active-color);
+}
+
+body{
+	background-image: var(--background-image);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100% 100%;
+}
+
+header{
+	background: var(--header-background);
+	border-bottom: var(--header-border-bottom);
+	padding: var(--header-padding);
+}
+
+header *{
+	
+}
+
+header div#logo-button{
+	background-image: var(--header-logo-image);
+	background-size: 65% 65%;
+	background-repeat: no-repeat;
+	background-position: center center;
+	border-radius: 50%;
+	width: var(--header-height);
+	height: var(--header-height);
+	cursor: pointer;
+	transition: var(--transition);
+}
+
+header div#logo-button:hover{
+	background-image: var(--header-logo-image-hover);
+	background-color: var(--logo-button-color-hover);
+}
+
+header div#logo-button:active{
+	background-image: var(--header-logo-image-active);
+	background-color: var(--logo-button-color-active);
+}
+
+header h1#header-title{
+	color: var(--header-title-color);
+	font-weight: var(--header-title-font-weight);
+	line-height: var(--header-height);
+	margin-right: 1%;
+	float: right;
+}
+
+header ul#function-list{
+	background-color: var(--function-list-background-color);
+	border-right: var(--function-list-border-right);
+	border-bottom: var(--function-list-border-bottom);
+	position: absolute;
+	left: 0;
+	width: var(--function-list-width);
+	display: none;
+}
+
+header ul#function-list li{
+	line-height: var(--function-list-li-line-height);
+	font-size: var(--function-list-li-font-size);
+	padding-left: 5%;
+	list-style: none;
+	cursor: pointer;
+}
+
+header ul#function-list li:hover{
+	background: var(--function-list-li-background-hover);
+	color: var(--function-list-li-color-hover);
+}
+
+header ul#function-list li:active{
+	background: var(--function-list-li-background-active);
+	color: var(--function-list-li-color-active);
+}
+
+div#popup-screen{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: var(--popup-screen-background);
+	display: none;
+}
+
+div#popup-screen div#popup-viewport{
+	background: var(--popup-viewport-background);
+	width: var(--popup-viewport-width);
+	height: var(--popup-viewport-height);
+	margin:auto;
+}
+
+div#popup-screen div#popup-viewport div#close-popup-button{
+	float: right;
+	width: var(--close-popup-button-width);
+	height: var(--close-popup-button-height);
+	line-height: var(--close-popup-button-height);
+	font-size: var(--close-popup-button-font-size);
+	margin-top: 1%;
+	margin-right: 1%;
+}
+
+div#popup-screen div#popup-viewport div#render{
+	margin: 3%;
+	padding: 3%;
+}
+
+div#app-viewport{
+	display: none;
+	background: var(--app-viewport-background);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+}
+
+div#app-viewport div#viewport-header{
+	height: var(--viewport-header-height);
+	background: var(--viewport-header-background);
+}
+
+div#app-viewport div#viewport-header span#app-name{
+	padding-left: 1%;
+	line-height: var(--viewport-header-height);
+}
+
+div#app-viewport div#viewport-header div#close-viewport-button{
+	display: inline;
+	float: right;
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+	border-radius: 0;
+	height: 100%;
+	padding: 0 3%;
+	line-height: var(--viewport-header-height);
+}
+
+
+div#app-viewport div#render{
+	margin: 3%;
+	padding: 3%;
+}
+
+
+
+
+
+

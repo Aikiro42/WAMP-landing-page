@@ -1,0 +1,761 @@
+<!--
+
+	This HTML document was originally produced in order for the programmer 
+to have a more convenient time to play many flash games.
+
+	This was eventually decided to be submitted as a ComSci project of the
+programmer and his designated partner with the goal of providing the luxury
+of playing flash files using Chrome with convenience.
+
+	Featuring a simple yet functional interface and the pseudo-implementation
+of a stack (noticeable in the "Recently Opened" flash file list), this HTML
+document provides the 
+
+-->
+<html>
+	<head>
+		<title>SWF Player v3.0 Beta</title>
+		<style>
+			/*
+				-webkit-
+				-ms-
+				-moz-
+				-o-
+			*/
+			*{
+				margin: 0;
+				padding: 0;
+				transition: background 0.1s;
+				-webkit-transition: background 0.1s;
+				-ms-transition: background 0.1s;
+				-moz-transition: background 0.1s;
+				-o-transition: background 0.1s;
+			}
+						
+			body{
+				background: black;
+				font-family: "Segoe UI Light";
+				overflow: hidden;
+			}
+			
+			div.list{
+				width: 25%;
+				height: 0%;
+				background: blue;
+				color: white;
+				cursor: pointer;
+			}
+			
+			div.list p.list_title{
+				background: rgba(100,100,100,0.5);
+				padding-left: 2%;
+			}
+			
+			div.list ul.true_list{
+				background: rgba(125,125,125,0.5);
+				color: white;
+			}
+			
+			div.list ul.true_list li{
+				padding-left: 2%;
+				list-style: none;
+			}
+			
+			div.list ul.true_list li:hover{
+				background: rgba(100,100,100,0.75);
+			}
+			
+			div.list ul.true_list li:active{
+				opacity: 0.75;
+			}
+			
+			div#res_list{
+				position: absolute;
+				z-index: 1;
+				right: 0;
+				top: 0;
+			}
+			
+			
+			div#res_list p{				
+				border-bottom-left-radius: 10px;
+				padding-right: 6%;
+				text-align: right;
+			}
+			
+			div#swf_list{
+				position: absolute;
+				z-index: 1;
+				top: 0;
+				left: 0;
+			}
+			
+			div#swf_list p{				
+				border-bottom-right-radius: 10px;
+			}
+			
+			div#swf_list ul{
+				border-top-right-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+			
+			div#swf_list ul li{
+				border-top-right-radius: 10px;
+				border-bottom-right-radius: 10px;
+			}
+			
+			div#res_list ul{
+				border-top-left-radius: 10px;
+				border-bottom-left-radius: 10px;
+				text-align: right;
+			}
+			
+			div#res_list ul li{
+				border-top-left-radius: 10px;
+				border-bottom-left-radius: 10px;
+				padding-right: 2%;
+			}
+			
+			p#message{
+				position: absolute;
+				top: 20%;
+				left: 0;
+				width: 100%;
+				height: 80%;
+				color: rgb(255,255,255);
+				text-align: center;
+				vertical-align: middle;
+				overflow: hidden;
+			}
+			
+			div#nav_buttons{
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translate(-50%, 0);
+			}
+			
+			div.circle_button{
+				background: rgba(100,100,100,0.5);
+				position: relative;
+				color: white;
+				width: 50px;
+				height: 50px;
+				border-radius:25px;
+				text-align: center;
+				line-height: 50px;
+				float: left;
+				margin: 10px;
+				font-family: monospace;
+				cursor: pointer;
+			}
+			
+			div.circle_button span.circle_button_tooltip{
+				width: max-content;
+				background: rgba(255,100,100,0.5);
+				padding: 0 20%;
+				position: absolute;
+				border-radius: 25px;
+				z-index: 1;
+			}
+			
+			div.circle_button:hover{
+				background: rgba(150,150,150,0.5);
+			}
+			
+			div.circle_button span#prev_tooltip{
+				text-align: right;
+				right: 105%;
+			}
+			
+			div.circle_button span#next_tooltip{
+				text-align: left;
+				left: 105%;
+			}
+			
+			div.circle_button:active{
+				opacity: 0.5;
+			}
+			
+			object#theParent{
+				position: absolute;
+				z-index: 0;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+			
+			embed#theChild{
+				margin: auto;
+			}
+			
+			div.list:hover p{
+				background: rgba(100,100,100,0.75);
+				color: white;
+			}
+			
+			div.list:active p{
+				opacity: 0.5;
+			}
+			
+			input#swf_upload{
+				display: none;
+			}
+			
+			p#swf_name{
+				padding: 0 1%;
+				width: max-content;
+				max-width: 40%;
+				background: rgba(100,100,100,0.5);
+				color: white;
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
+				text-align:center;
+				cursor: default;
+				position: absolute;
+				z-index: 3;
+				left: 50%;
+				transform: translate(-50%, 0);
+				
+				transition: padding 0.1s, color 0.1s;
+				-webkit-transition: padding 0.1s, color 0.1s;
+				-moz-transition: padding 0.1s, color 0.1s;
+				-o-transition: padding 0.1s, color 0.1s;
+				-ms-transition: padding 0.1s, color 0.1s;
+			}
+			
+			p#swf_name:hover{
+				padding: 1%;
+				background: rgba(255,255,255,1);
+				color: black;
+				font-weight: bold;
+			}
+			
+			div#hide_ui{
+				position: absolute;
+				width: 100px;
+				height: 100px;
+				background: rgba(255,100,100, 0.5);
+				bottom: 0;
+				left: 0;
+				border-radius: 50px;
+				cursor: pointer;
+				transform: translate(-50%,50%);
+				transition: width 0.1s, height 0.1s, border-radius 0.1s;
+				-webkit-transition: width 0.1s, height 0.1s, border-radius 0.1s;
+				-moz-transition: width 0.1s, height 0.1s, border-radius 0.1s;
+				-o-transition: width 0.1s, height 0.1s, border-radius 0.1s;
+				-ms-transition: width 0.1s, height 0.1s, border-radius 0.1s;	
+			}
+			
+			div#hide_ui span#hide_ui_tooltip{
+				visibility: hidden;
+				width: max-content;
+				background: rgba(100,100,100,0.5);
+				color: white;
+				border-radius: 5px;
+				position: absolute;
+				z-index: 1;
+				padding: 10%;
+				text-align: center;
+				bottom: 100%;
+				left: 100%;
+			}
+			
+			div#hide_ui:hover{
+				width: 150px;
+				height: 150px;
+				border-radius: 75px;
+			}
+			
+			div#hide_ui:hover span#hide_ui_tooltip{
+				visibility: visible;
+			}
+			
+			div#hide_ui:active{
+				opacity: 0.5;
+			}
+			
+			
+		</style>
+		<!--It would be very inconvenient if I were to release the file with the jQuery .js file.-->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="swf-list.js"></script>
+		<!--<script src="jquery-3.3.1.min.js"></script>-->
+	</head>
+	<!--Dropping anything on the body will open it.-->
+	<body ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+		<div class="list" id="swf_list">
+			<p class="list_title">Recently Opened</p>
+			<ul class="true_list" id="recent_list">
+			</ul>
+		</div>
+		
+		<p id="swf_name">Drag a flash file on the screen to get started!</p>	
+		
+		
+		<div class="list" id="res_list">
+			<p  class="list_title">Resolutions</p>
+			<ul class="true_list" id="resolution_list">
+				<li id="autosize">Automatic</li>
+				<li id="res_item">
+					<span id="width">640</span>
+					x
+					<span id="height">480</span>
+				</li>
+				<li id="res_item">
+					<span id="width">800</span>
+					x
+					<span id="height">600</span>
+				</li>
+				<li id="res_item">
+					<span id="width">1024</span>
+					x
+					<span id="height">768</span>
+				</li>
+				<li id="res_item">
+					<span id="width">1280</span>
+					x
+					<span id="height">720</span>
+				</li>
+				<li id="res_item">
+					<span id="width">1366</span>
+					x
+					<span id="height">768</span>
+				</li>
+				<li id="res_item">
+					<span id="width">1920</span>
+					x
+					<span id="height">1080</span>
+				</li>
+				<li id="res_item">
+					<span id="width">1920</span>
+					x
+					<span id="height">1200</span>
+				</li>
+			</ul>
+		</div>
+		
+		<object id="theParent">
+			<embed style="visibility: hidden;" id="theChild" src="" />
+			<p id="message" style="opacity: 1;">
+				<span style="font-family: 'Consolas'; word-spacing: .25em; letter-spacing: 0.125em;">( It is recommended that you use this utility while the browser is <strong style="color: rgb(255,100,100);">maximized</strong> or in <strong style="color: rgb(255,100,100);">fullscreen</strong>. )</span>
+				<br /><br />
+				<span style="font-weight: bold; font-size: 2em; color: rgb(255,100,100);">Instructions</span>
+				<br /><br />
+				1. Place your flash (.swf) files in the directory where the browser-based player is located.
+				<br />
+				2. Drop your flash Files on the screen <em>(You can also drop multiple flash files here.)</em>
+				<br />
+				3. The topmost SWF file (or the only flash file) that was dropped will automatically play.
+				<br /><br /><br />
+				<span style="font-weight: bold; font-size: 2em; color: rgb(255,100,100);">Tips</span>
+				<br /><br />
+				You can change the resolution to suit your computer's capability.<br />
+				Select a resolution from the list that will drop down when the top-right part of the screen is clicked.
+				<br /><br />
+				You can also cycle through the flash files you've opened by using the buttons on the lower part of the screen.
+				<br />Otherwise you can manually navigate to the flash file you wish to play by navigating the list accessed by the top-right part of the screen.
+				
+			</p>
+		</object>
+		
+		<div id="nav_buttons">
+			<div class="circle_button" id="prev"><
+				<span class="circle_button_tooltip" id="prev_tooltip">Drag a flash file on the screen to get started!</span>
+			</div>
+			<div class="circle_button" id="next">>
+				<span class="circle_button_tooltip" id="next_tooltip">Drag a flash file on the screen to get started!</span>
+			</div>
+		</div>
+		
+		<div id="hide_ui">
+			<span id="hide_ui_tooltip">Hide UI</span>
+		</div>
+		
+		<!--I have to improve the performance of this thing.-->
+		<script>
+		
+		function debug(){
+			var loc = window.location.pathname;
+			var dir = loc.substring(0, loc.lastIndexOf('/'));
+			console.log(loc);
+		}
+		
+		/**
+		Global variable used to access the recently opened files with the nav buttons on the lower-left corner of the screen.
+		*/
+		var currentIndex = 0;
+		var currentWidth = "100%";
+		var currentHeight = "100%";
+		
+		function setCircleToolTip(){
+			nextIndex = currentIndex - 1;
+			prevIndex = currentIndex + 1;
+			
+			$("span#prev_tooltip").html('No earlier file to open.');
+			$("span#next_tooltip").html('No later file to open.');
+
+			
+			var nextLi = $("li#rec_item")[nextIndex];
+			var prevLi = $("li#rec_item")[prevIndex];
+			
+			if(nextLi != null){
+				console.log("Next:" + $("li#rec_item")[nextIndex].innerHTML);
+				$("span#next_tooltip").html($("li#rec_item")[nextIndex].innerHTML);
+			}else{
+				console.log("next is null");
+			}
+			if(prevLi != null){
+				$("span#prev_tooltip").html($("li#rec_item")[prevIndex].innerHTML);
+			}else{
+				console.log("prev is null");
+			}
+		}
+		
+		function setNameLabel(){
+			console.log("Editing name innerHTML...");
+			$("p#swf_name").html($("li#rec_item")[currentIndex].innerHTML);
+			console.log("Edited name innerHTML.")
+		}
+		
+		/**
+		Returns the extension of the provided file name. It does this by returning the string after the dot. Example: "file.txt" returns "txt".
+		*/
+		function getFileExt(filename){
+			var x = filename.split('.').pop();
+			console.log(x);
+			return x;
+		}
+		
+		$("div#hide_ui").click(function(){
+			hideUI();
+		});
+		
+		function hideUI(){
+			$("div.list").fadeToggle(100);
+			$("p#swf_name").fadeToggle(100);
+			$("div#nav_buttons").fadeToggle(100);
+				console.log("boiiiiiii");
+			if($("span#hide_ui_tooltip").html() == "Hide UI"){
+				$("span#hide_ui_tooltip").html("Show UI");
+				console.log("boiiiiiii");
+			}else{
+				$("span#hide_ui_tooltip").html("Hide UI");
+			}
+		}
+		
+		/**
+			*These events have been set on the ondrag and ondrop attributes of the <body> element itself.
+		*/
+		
+		/**
+		Handles the event in which files are dropped on the screen*.
+		*/
+		function dropHandler(ev) {
+		  console.log('File(s) dropped');
+
+		  // Prevent default behavior (Prevent file from being opened)
+		  ev.preventDefault();
+		  
+		  var fileNum = ev.dataTransfer.items.length;
+		  var manyFiles =  fileNum > 1;
+		  
+		  if (ev.dataTransfer.items) {
+			  // If dropped items aren't files, reject them
+			  if (ev.dataTransfer.items[0].kind === 'file') {
+				if(manyFiles){
+					console.log("Many files detected.");
+					for(var i = fileNum-1; i >= 1; i--){
+						var f = ev.dataTransfer.items[i].getAsFile();
+						if(getFileExt(f.name) == "swf"){
+							updateNavlist(f.name);
+						}
+					}
+				}
+			  
+				var file = ev.dataTransfer.items[0].getAsFile();
+				console.log('... file[' + 0 + '].name = ' + file.name);
+				if(getFileExt(file.name) == "swf"){
+					loadSWF(file.name);
+				}
+			  }
+			
+		  } else {
+			// Use DataTransfer interface to access the file(s)
+				if(manyFiles){
+					console.log("Many files detected.");
+					for(var i = fileNum-1; i >= 1; i--){
+						var f = ev.dataTransfer.items[i].getAsFile();
+						updateNavlist(f.name);
+					}
+				}
+			console.log('... file[' + 0 + '].name = ' + ev.dataTransfer.files[0].name);
+			loadSWF(file.name);
+		  } 
+		  
+		  // Pass event to removeDragData for cleanup
+		  currentIndex = 0;
+		  removeDragData(ev)
+		}
+		
+		/**
+		Handles the event in which files are being dragged over the screen*.
+		*/
+		function dragOverHandler(ev) {
+		  console.log('File(s) in drop zone'); 
+
+		  // Prevent default behavior (Prevent file from being opened)
+		  ev.preventDefault();
+		}
+		
+		/**
+		Removes cached drag data that is generated as the files are dragged around the screen*.
+		*/
+		function removeDragData(ev) {
+		  console.log('Removing drag data')
+
+		  if (ev.dataTransfer.items) {
+			// Use DataTransferItemList interface to remove the drag data
+			ev.dataTransfer.items.clear();
+		  } else {
+			// Use DataTransfer interface to remove the drag data
+			ev.dataTransfer.clearData();
+		  }
+		}
+		
+		function loadSWF(fileName, element){
+			currentIndex=0;
+			loadSWFcore(fileName);
+			if(element != null){
+				document.getElementById("recent_list").removeChild(element);
+			}
+			setCircleToolTip();
+			setNameLabel();
+		}
+		
+		/**
+			Loads up the SWF in a new <embed> element and stacks the name in the recently opened list.
+		*/
+		function loadSWFcore(fileName){
+			hideMessage();
+			document.getElementById("theChild").remove();
+			var parent = document.getElementById("theParent");
+			var child = document.createElement("embed");
+			child.src= fileName;
+			child.id="theChild";
+			child.style.width="100%";
+			child.style.height="100%";
+			
+			child.style.background = "rgba(255,255,255,0.0625)";
+			
+			parent.appendChild(child);
+			updateNavlist(fileName);
+			setCircleToolTip();
+			setNameLabel();
+		}
+		
+		/**
+			Hides the first thing that you see on the screen when you first open the program.
+		*/
+		function hideMessage(){
+			var msg = document.getElementById("message");
+			msg.style.visibility = 'hidden';
+		}
+		
+		/**
+		Prepends a <li> element to the recently opened unordered list element. Clicking on it loads up its respective SWF file.
+		*/
+		function updateNavlist(name){
+			var recent_items = $("#recent_list li");
+			for(var i = 0; i < recent_items.length; i++){
+				if(recent_items[i].innerHTML == name){
+					recent_items[i].remove();
+				}
+			}
+			$("#recent_list").prepend("<li id=\"rec_item\" onclick=\"loadSWF('"+name+"',this);\">"+name+"</li>");
+		}
+		
+		//jQuery
+		$(function(){
+			
+			/**
+				It's taxing filesize-wise to copypasta this alert.
+			*/
+			function error_no_recently_opened_file(){
+				alert("You haven't opened anything recently.\nDrag a flash file on the browser screen to get started.");
+			}
+			
+			/**
+			Slides up all lists for aesthetic purposses.
+			*/
+			$("div.list ul").slideUp(0);
+			$("span.circle_button_tooltip").fadeOut(0);
+			
+			$("div.circle_button").hover(function(){
+				$(this).find("span.circle_button_tooltip").fadeIn(100);
+			},function(){
+				$(this).find("span.circle_button_tooltip").fadeOut(100);
+			});
+			
+			
+			/**
+			Slides the resolution and the recent lists up and down when clicked on.
+			*/
+			$("div#swf_list").click(function(){
+				if($("li#rec_item").length > 0){
+					$("div#swf_list ul").slideToggle();
+				}else{
+					error_no_recently_opened_file();
+				}
+			});
+			
+			/**
+			Slides the resolution and the recent lists up and down when clicked on.
+			*/
+			$("div#res_list").click(function(){
+				if($("li#rec_item").length > 0){
+					$("div#res_list ul").slideToggle();
+				}else{
+					error_no_recently_opened_file();
+				}
+			});
+			
+			/**
+			Makes each recent item from the recent list load its respectively assigned SWF
+			*/
+			$("li#rec_item").click(function(){
+				//loadSWF_basic($(this).innerHTML);
+				$(this).remove();
+			});
+			
+			/**
+			Cycles down the recent list and loads the previous earliest SWF.
+			*/
+			$("div#prev").click(function(){
+				var stackSize = $("li#rec_item").length;
+				if(stackSize > 0){
+					if(currentIndex < stackSize - 1){
+						currentIndex++;
+						loadSWF_currentDimensions($("li#rec_item")[currentIndex].innerHTML, false);
+					}
+					setCircleToolTip();
+				}else{
+					error_no_recently_opened_file();
+				}
+			});
+			
+			/**
+			Cycles up the recent list and loads the next latest SWF.
+			*/
+			$("div#next").click(function(){
+				var stackSize = $("li#rec_item").length;
+				if(stackSize > 0){
+					if(currentIndex > 0){
+						currentIndex--;
+						loadSWF_currentDimensions($("li#rec_item")[currentIndex].innerHTML, false);
+					}
+					setCircleToolTip();
+				}else{
+					error_no_recently_opened_file();
+				}
+			});
+			
+			/**
+				Resets the size of the SWF being played by reappending a new, resized object.
+			*/
+			$("li#res_item").click(function(){
+				var w = $(this).find("span#width").text() + "px";
+				var h = $(this).find("span#height").text() + "px";
+				currentWidth = w;
+				currentHeight = h;
+				loadSWF_setSize($("embed").attr("src"), w, h);
+			
+			});
+			
+			/**
+				Reloads the SWF in a new defaultly-css'ed <embed> element.
+			*/
+			$("#autosize").click(function(){
+				currentWidth = "100%";
+				currentHeight = "100%";
+				loadSWF_controlled($("embed").attr("src"), false);
+			});
+			
+			
+			/**
+			Core function in loading the SWF
+			*/
+			function loadSWF_core(fileName, width, height, willUpdateList, hasBorder){
+			
+				var oldSource = document.getElementById("theChild").src;
+			
+				if(fileName != ""){
+					hideMessage();
+				}
+				
+				console.log(fileName);
+				
+				document.getElementById("theChild").remove();
+				console.log("Removed element embed#theChild");
+				
+				var parent = document.getElementById("theParent");
+				
+				var child = document.createElement("embed");
+				
+				child.id="theChild";
+				
+				child.style.background = "rgba(255,255,255,0.0625)";
+				
+				child.style.width=width;
+				child.style.height=height;
+				
+				child.style.position = "absolute";
+				child.style.top="50%";
+				child.style.left="50%";
+				child.style.transform="translate(-50%, -50%)";
+				
+				if(hasBorder){
+					child.style.border="1px solid white";
+				}
+				
+				child.src= "" + fileName;
+				
+				console.log("Old source: " + oldSource);
+				console.log("New source: " + child.src);
+				
+				parent.appendChild(child);
+				
+				if(willUpdateList){
+					updateNavlist(fileName);
+				}
+				setCircleToolTip();
+				setNameLabel();
+			}
+			
+			function loadSWF_setSize(fileName, width, height){
+				loadSWF_core(fileName, width, height, false, true);
+			}
+			
+			function loadSWF_basic(fileName){
+				loadSWF_core(fileName, "100%", "100%", true, false);
+			}
+			
+			function loadSWF_controlled(fileName, willUpdateList){
+				loadSWF_core(fileName, "100%", "100%", willUpdateList, false);
+			}
+			
+			function loadSWF_currentDimensions(fileName, willUpdateList){
+				if(currentWidth == "100%" && currentHeight == "100%"){
+					loadSWF_core(fileName, currentWidth, currentHeight, willUpdateList, false);
+				}else{
+					loadSWF_core(fileName, currentWidth, currentHeight, willUpdateList, true);	
+				}
+			}
+			
+		});
+		
+		</script>
+	</body>
+</html>

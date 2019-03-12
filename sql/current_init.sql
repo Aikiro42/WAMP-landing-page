@@ -1,0 +1,11 @@
+DROP DATABASE IF EXISTS LandingSiteDatabase;
+
+CREATE DATABASE IF NOT EXISTS LandingSiteDatabase;
+
+USE LandingSiteDatabase;
+
+CREATE TABLE SitePortals(
+	portal_id INT UNSIGNED NOT NULL PRIMARY KEY,
+	site_name VARCHAR(2047) NOT NULL,
+	site_link VARCHAR(65535) NOT NULL
+);

@@ -1,0 +1,73 @@
+:root{
+	
+	--font-family: 'Segoe UI Light','Minimal',sans-serif;
+	--color-scheme-main: rgb(50,50,50);
+	--color-scheme-accent: rgb(100,100,100);
+	--color-scheme-light: rgb(175,175,175);
+	--color-scheme-dark: rgb(25,25,25);
+	
+	--button-background: var(--color-scheme-main);
+	--button-padding: 1%;
+	--button-color: white;
+	--button-hover-background: var(--color-scheme-light);
+	--button-hover-color: var(--color-scheme-dark);
+	--button-active-background: var(--color-scheme-dark);
+	--button-active-color: var(--color-scheme-light);
+	--button-border: 1px solid var(--color-scheme-light);
+	--button-border-radius: 25%;
+	--button-text-align: center;
+	--button-transition: background .1s;	
+	
+	--background-image: url('../img/custom/default/background.jpg');
+	
+	--header-height: 75px;
+	--header-border-bottom: 1px solid var(--color-scheme-accent);
+	--header-padding: 5px;
+	
+	--header-logo-image: url('../img/custom/default/logo.png');
+	--header-logo-image-hover: url("../img/custom/default/logo-hover.png");
+	--header-logo-image-active: url("../img/custom/default/logo-active.png");
+	
+	--header-background: var(--color-scheme-main);
+	--header-title-color: white;
+	--header-title-font-weight: normal;
+	--header-title-margin-left: 7.5%;
+	
+	
+	
+	
+	--logo-button-color-hover: rgb(60,60,60);
+	--logo-button-color-active: rgb(60,60,60);
+	
+	--function-list-background-color: var(--color-scheme-main);
+	--function-list-border-bottom: var(--color-scheme-accent);
+	--function-list-width: 30%;
+	
+	--function-list-li-line-height: 30px;
+	--function-list-li-font-size: 20px;
+	--function-list-li-background-hover: var(--color-scheme-light);
+	--function-list-li-color-hover: var(--color-scheme-dark);
+	--function-list-li-background-active: var(--color-scheme-dark);
+	--function-list-li-color-active: var(--color-scheme-light);
+	
+	--popup-screen-background: rgba(0,0,0,0.5);
+	--popup-viewport-background: var(--color-scheme-main);
+	--popup-viewport-width: 75%;
+	--popup-viewport-height: 100%;
+	
+	--viewport-header-height: 30px;
+	--viewport-header-background: var(--color-scheme-main);
+	
+	--close-popup-button-width: 50px;
+	--close-popup-button-height: 50px;
+	--close-popup-button-font-size: 25px;
+	
+	--app-viewport-background: rgb(0,0,0,0.5);
+	
+	--transition: background .1s;
+}
+
+@font-face{
+	font-family: Minimal;
+	src: url('../../../fonts/custom/default/minimal.otf');
+}
