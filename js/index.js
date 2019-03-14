@@ -11,11 +11,11 @@ $(function(){
 	
 	$('li#open-application').off().click(function(){
 		var popup_screen = $('div#popup-screen');
-		var render = $('div#render');
+		var popup_render = $('div#popup-viewport div#render');
 		$.ajax({
 			url: "applications/main/open-application/open-application.php",
 			success: function(data){
-				render.html(data);
+				popup_render.html(data);
 			}
 		});
 		popup_screen.fadeIn(100);
@@ -31,6 +31,11 @@ $(function(){
 			$('div#app-viewport').fadeOut(100);
 			$(this).html('Show Viewport');
 		}
+	});
+	
+	/*using an off function on these will remove the individual functionality of the list items*/
+	$('li.function-list-item').click(function(){
+		$(this).parent().slideUp(100);
 	});
 	
 	$('div#close-popup-button').off().click(function(){

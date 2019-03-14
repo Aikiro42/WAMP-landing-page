@@ -21,9 +21,9 @@
 			<div id="logo-button"></div>
 			<!-- header title changed by PHP -->
 			<ul id="function-list">
-				<li id="open-application">Open Application</li>
-				<li id="personal-bookmarks">Personal Bookmarks</li>
-				<li id="show-viewport" class="debug">Show Viewport</li>
+				<li class="function-list-item" id="open-application">Open Application</li>
+				<li class="function-list-item" id="personal-bookmarks">Personal Bookmarks</li>
+				<li class="function-list-item debug" id="show-viewport">Show Viewport</li>
 			</ul>
 		</header>
 		
